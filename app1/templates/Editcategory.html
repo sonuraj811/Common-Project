@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% extends 'index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+   <h3><center>Edit Category</center></h3>
+</div>
+<div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Basic form elements</h4>
+                  <p class="card-description">
+                    Basic form elements
+                  </p>
+                  <form class="forms-sample" action="{% url 'updatecategory' dataid=details.id %}" method="post"  enctype="multipart/form-data" >
+                      {% csrf_token %}
+                    <div class="form-group">
+                      <label for="exampleInputName1">Category Name</label>
+                      <input type="text" class="form-control" id="exampleInputName1" placeholder="Category Name" name="name" value="{{ details.name }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputName1">Description</label>
+                      <input type="text" class="form-control" id="exampleInputName" placeholder="Description" name="content" value="{{ details.content }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail3">Upload File</label>
+                      <input type="file" class="form-control" id="exampleInputEmail2" placeholder="Image" name="img[]" value="{{ details.image }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary me-2">Submit</button>
+                    <button class="btn btn-light">Cancel</button>
+                  </form>
+                </div>
+              </div>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% extends 'index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<center><h2>Registeration Details</h2></center>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>NAME</th>
+            <th>DESCRIPTION</th>
+            <th>IMAGE</th>
+        </tr>
+    </thead>
+    {% for i in details %}
+        <tr>
+            <td>{{ i.name }}</td>
+            <td>{{ i.content }}</td>
+            <td>
+                <img src="{{ i.image.url }}" width="50px",height="50px">
+            </td>
+            <td>
+                <form action="{% url 'edititems' dataid=i.id %}">
+                    <button type="submit" class="btn btn-primary">Edit</button>
+                </form>
+            </td>
+             <td>
+                 <form action="{% url 'deledata' dataid=i.id %}">
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                 </form>
+             </td>
+
+
+
+        </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+</html>
+{% endblock %}
