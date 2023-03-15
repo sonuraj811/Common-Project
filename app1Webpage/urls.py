@@ -13,6 +13,9 @@ urlpatterns=[
     path('login/',views.login,name='login'),
     path('loginsave/',views.loginsave,name='loginsave'),
     path('customerdetails/', views.customerdetails, name='customerdetails'),
-    path('cart/', views.cart, name='cart')
+    path('logoutfn/', views.logoutfn, name='logoutfn'),
+    path('cart/', views.cart, name='cart'),
+    path('cartview/', views.cartview, name='cartview'),
+    path('deleteitem/<int:dataid>', views.deleteitem, name='deleteitem')
 
 ]

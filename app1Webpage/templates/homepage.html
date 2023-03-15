@@ -45,7 +45,9 @@
                     <div class="col-md pr-4 d-flex topper align-items-center">
                         <div class="icon mr-2 d-flex justify-content-center align-items-center"><span
                                 class="icon-paper-plane"></span></div>
-                        <span class="text">shonesony6@@email.com</span>
+                        {% if request.session.user %}
+                        <span class="text">Welcome {{request.session.user}}</span>
+                        {% endif %}
                     </div>
                     <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
                         <span class="text">3-5 Business days delivery &amp; Free Returns</span>
@@ -80,10 +82,23 @@
                     </div>
                 </li>
                 <li class="nav-item"><a href="{% url 'aboutpage' %}" class="nav-link">About</a></li>
-                <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+                <li class="nav-item"><a href="{% url 'product' %}" class="nav-link">Products</a></li>
                 <li class="nav-item"><a href="{% url 'contactpage' %}" class="nav-link">Contact</a></li>
-                <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span
-                        class="icon-shopping_cart"></span>[0]</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">LOGIN & LOGOUT</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        <a class="dropdown-item" href="{% url 'login' %}">Login & Register</a>
+                        <a class="dropdown-item" href="{% url 'logoutfn' %}">Logout</a>
+                        <!--                <a class="dropdown-item" href="product-single.html">Single Product</a>-->
+                        <!--                <a class="dropdown-item" href="cart.html">Cart</a>-->
+                        <!--                <a class="dropdown-item" href="checkout.html">Checkout</a>-->
+                    </div>
+                </li>
+                {% if request.session.user %}
+                <li class="nav-item cta cta-colored"><a href="{% url 'cart' %}" class="nav-link"><span
+                        class="icon-shopping_cart">{{request.session.}}</span>[0]</a></li>
+                {% endif %}
 
             </ul>
         </div>
@@ -260,55 +275,56 @@
                         </div>
                         <div class="bottom-area d-flex px-3">
                             <div class="m-auto d-flex">
-                                <form method="post" action="{% url 'discategory' itemcatg=i.name %}" enctype="multipart/form-data" >
-                                        {% csrf_token %}
+                                <form method="post" action="{% url 'discategory' itemcatg=i.name %}"
+                                      enctype="multipart/form-data">
+                                    {% csrf_token %}
                                     <button type="submit" class="btn btn-primary">View Details {{i.name}}</button>
-                                        </form>
-<!--                                <a href="#"-->
-<!--                                   class="add-to-cart d-flex justify-content-center align-items-center text-center">-->
-<!--                                    <span><i class="ion-ios-menu"></i></span>-->
-<!--                                </a>-->
-<!--                                <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">-->
-<!--                                    <span><i class="ion-ios-cart"></i></span>-->
-<!--                                </a>-->
-<!--                                <a href="#" class="heart d-flex justify-content-center align-items-center ">-->
-<!--                                    <span><i class="ion-ios-heart"></i></span>-->
-<!--                                </a>-->
+                                </form>
+                                <!--                                <a href="#"-->
+                                <!--                                   class="add-to-cart d-flex justify-content-center align-items-center text-center">-->
+                                <!--                                    <span><i class="ion-ios-menu"></i></span>-->
+                                <!--                                </a>-->
+                                <!--                                <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">-->
+                                <!--                                    <span><i class="ion-ios-cart"></i></span>-->
+                                <!--                                </a>-->
+                                <!--                                <a href="#" class="heart d-flex justify-content-center align-items-center ">-->
+                                <!--                                    <span><i class="ion-ios-heart"></i></span>-->
+                                <!--                                </a>-->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-<!--            <div class="col-md-6 col-lg-3 ftco-animate">-->
-<!--                <div class="product">-->
-<!--                    <a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-2.jpg' %}"-->
-<!--                                                      alt="Colorlib Template">-->
-<!--                        <div class="overlay"></div>-->
-<!--                    </a>-->
-<!--                    <div class="text py-3 pb-4 px-3 text-center">-->
-<!--                        <h3><a href="#">Strawberry</a></h3>-->
-<!--                        <div class="d-flex">-->
-<!--                            <div class="pricing">-->
-<!--                                <p class="price"><span>$120.00</span></p>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="bottom-area d-flex px-3">-->
-<!--                            <div class="m-auto d-flex">-->
-<!--                                <a href="#"-->
-<!--                                   class="add-to-cart d-flex justify-content-center align-items-center text-center">-->
-<!--                                    <span><i class="ion-ios-menu"></i></span>-->
-<!--                                </a>-->
-<!--                                <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">-->
-<!--                                    <span><i class="ion-ios-cart"></i></span>-->
-<!--                                </a>-->
-<!--                                <a href="#" class="heart d-flex justify-content-center align-items-center ">-->
-<!--                                    <span><i class="ion-ios-heart"></i></span>-->
-<!--                                </a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--            <div class="col-md-6 col-lg-3 ftco-animate">-->
+            <!--                <div class="product">-->
+            <!--                    <a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-2.jpg' %}"-->
+            <!--                                                      alt="Colorlib Template">-->
+            <!--                        <div class="overlay"></div>-->
+            <!--                    </a>-->
+            <!--                    <div class="text py-3 pb-4 px-3 text-center">-->
+            <!--                        <h3><a href="#">Strawberry</a></h3>-->
+            <!--                        <div class="d-flex">-->
+            <!--                            <div class="pricing">-->
+            <!--                                <p class="price"><span>$120.00</span></p>-->
+            <!--                            </div>-->
+            <!--                        </div>-->
+            <!--                        <div class="bottom-area d-flex px-3">-->
+            <!--                            <div class="m-auto d-flex">-->
+            <!--                                <a href="#"-->
+            <!--                                   class="add-to-cart d-flex justify-content-center align-items-center text-center">-->
+            <!--                                    <span><i class="ion-ios-menu"></i></span>-->
+            <!--                                </a>-->
+            <!--                                <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">-->
+            <!--                                    <span><i class="ion-ios-cart"></i></span>-->
+            <!--                                </a>-->
+            <!--                                <a href="#" class="heart d-flex justify-content-center align-items-center ">-->
+            <!--                                    <span><i class="ion-ios-heart"></i></span>-->
+            <!--                                </a>-->
+            <!--                            </div>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
             <!--    			<div class="col-md-6 col-lg-3 ftco-animate">-->
             <!--    				<div class="product">-->
             <!--    					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-3.jpg' %}" alt="Colorlib Template">-->
@@ -763,14 +779,23 @@
 {% if message.tags == 'warning' %}
 <script>
     swal('{{message}}','','warning');
+
+
+
 </script>
 {% elif message.tags == 'error' %}
 <script>
     swal('{{message}}','','error');
+
+
+
 </script>
 {% else %}
 <script>
         swal('{{message}}','','success');
+
+
+
 </script>
 {% endif %}
 

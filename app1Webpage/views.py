@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from app1.models import registeration_data,category_data,product_data,contact_data
-from app1Webpage.models import Customerdetails
+from app1Webpage.models import Customerdetails,cartdb
 
 # Create your views here.
 def webpage(request):
@@ -84,9 +84,31 @@ def customerdetails(request):
 
             return render(request, 'customerloginpage.html', {'msg': "Sorry... password not matched."})
 
+def logoutfn(request):
+    del request.session['user']
+    del request.session['pass']
+    return redirect(webpage)
+
 def cart(request):
-    return render(request,"Cart_Product.html")
+    da = category_data.objects.all()
+    data = cartdb.objects.all()
+    return render(request, 'Cart_Product.html', {'data': data, 'da': da})
 
+def cartview(request):
+    if request.method=="POST":
+        na=request.POST.get('name')
+        rs=request.POST.get('price')
+        qt=request.POST.get('quantity')
+        to=request.POST.get('totalprice')
 
+        obj=cartdb(name=na, price=rs, quantity=qt, total=to)
+        obj.save()
+    return redirect(cart)
+
+def deleteitem(request,dataid):
+
+    data=cartdb.objects.filter(id=dataid)
+    data.delete()
+    return redirect(cart)
 
 

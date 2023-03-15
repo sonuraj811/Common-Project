@@ -44,7 +44,9 @@
                     <div class="col-md pr-4 d-flex topper align-items-center">
                         <div class="icon mr-2 d-flex justify-content-center align-items-center"><span
                                 class="icon-paper-plane"></span></div>
-                        <span class="text">youremail@email.com</span>
+                        {% if request.session.user %}
+                        <span class="text">Welcome {{request.session.user}}</span>
+                        {% endif %}
                     </div>
                     <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
                         <span class="text">3-5 Business days delivery &amp; Free Returns</span>
@@ -63,8 +65,29 @@
         </button>
 
         <div class="collapse navbar-collapse" id="ftco-nav">
-
-
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a href="{% url 'webpage' %}" class="nav-link">Home</a></li>
+                <li class="nav-item active dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">CATEGORY</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        {% for i in data %}
+                        <a class="dropdown-item" href="{% url 'discategory' itemcatg=i.name %}">{{i.name}}</a>
+                        {% endfor %}
+                        <!--              	<a class="dropdown-item" href="wishlist.html">Wishlist</a>-->
+                        <!--                <a class="dropdown-item" href="product-single.html">Single Product</a>-->
+                        <!--                <a class="dropdown-item" href="cart.html">Cart</a>-->
+                        <!--                <a class="dropdown-item" href="checkout.html">Checkout</a>-->
+                    </div>
+                </li>
+                <li class="nav-item"><a href="{% url 'aboutpage' %}" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="{% url 'product' %}" class="nav-link">Products</a></li>
+                <li class="nav-item"><a href="{% url 'contactpage' %}" class="nav-link">Contact</a></li>
+                {% if request.session.user %}
+                <li class="nav-item cta cta-colored"><a href="{% url 'cart' %}" class="nav-link"><span
+                        class="icon-shopping_cart">{{request.session.}}</span>[0]</a></li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </nav>
@@ -83,15 +106,98 @@
 </div>
 
 <section class="ftco-section">
+    {% if request.session.user %}
+    <form method="post" action="{% url 'cartview' %}">
+        {% csrf_token %}
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-6 mb-5 ftco-animate">
+                    <a href="{{details.image.url }}" class="image-popup"><img src="{{ details.image.url }}"
+                                                                              class="img-fluid"
+                                                                              alt="Colorlib Template"></a>
+                </div>
+                <div class="col-lg-6 product-details pl-md-5 ftco-animate">
+                    <h3>{{details.name}}</h3>
+                    <input type="hidden" value="{{details.name}}" name="name">
+                    <div class="rating d-flex">
+                        <p class="text-left mr-4">
+                            <a href="#" class="mr-2">5.0</a>
+                            <a href="#"><span class="ion-ios-star-outline"></span></a>
+                            <a href="#"><span class="ion-ios-star-outline"></span></a>
+                            <a href="#"><span class="ion-ios-star-outline"></span></a>
+                            <a href="#"><span class="ion-ios-star-outline"></span></a>
+                            <a href="#"><span class="ion-ios-star-outline"></span></a>
+                        </p>
+                        <p class="text-left mr-4">
+                            <a href="#" class="mr-2" style="color: #000;">100 <span
+                                    style="color: #bbb;">Rating</span></a>
+                        </p>
+                        <p class="text-left">
+                            <a href="#" class="mr-2" style="color: #000;">500 <span style="color: #bbb;">Sold</span></a>
+                        </p>
+                    </div>
+                    <p class="price"><span>per kg: ${{details.price}}</span></p>
+                    <input type="hidden" class="form-control" id="price" value="{{details.price}}">
+                    <p>{{details.descrption}}</p>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="form-group d-flex">
+                                <div class="select-wrap">
+                                    <div class="icon"></div>
+                                    <!--	                  <select name="" id="" class="form-control">-->
+                                    <!--	                  	<option value="">Small</option>-->
+                                    <!--	                    <option value="">Medium</option>-->
+                                    <!--	                    <option value="">Large</option>-->
+                                    <!--	                    <option value="">Extra Large</option>-->
+                                    <!--	                  </select>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-100"></div>
+                        <div class="input-group col-md-6 d-flex mb-3">
+                            <!--	             	<span class="input-group-btn mr-2">-->
+                            <!--	                	<button type="button" class="quantity-left-minus btn" data-type="minus" data-field="quantity">-->
+                            <!--	                   <i class="ion-ios-remove"></i>-->
+                            <!--	                	</button>-->
+                            <!--	            		</span>-->
+                            <input type="number" id="quantity" name="quantity" class="form-control input-number"
+                                   min="1" max="100" required="">
+                            <!--                        <span class="input-group-btn ml-2">-->
+                            <!--	                	<button type="button" class="quantity-right-plus btn" data-type="plus" data-field="quantity">-->
+                            <!--	                     <i class="ion-ios-add"></i>-->
+                            <!--	                 </button>-->
+                            <!--	             	</span>-->
+                        </div>
+                        <div class="w-100"></div>
+                        <div class="col-md-12">
+                            <p style="color: #000;">600 kg available</p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="price" id="price" value="{{details.price}}">
+
+                    <b><h6>Total price</h6></b>
+                    <input type="text" name="totalprice" id="totalprice" required=""><br><br>
+                    <button type="submit">Add to Cart</button>
+    </form>
+    <!--                <p><a href="{% url 'login' %}" class="btn btn-black py-3 px-5">Add to Cart</a></p>-->
+    </div>
+    </div>
+
+    </div>
+    {% else %}
+
     <div class="container">
         <div class="row">
 
             <div class="col-lg-6 mb-5 ftco-animate">
-                <a href="{{details.image.url }}" class="image-popup"><img src="{{ details.image.url }}" class="img-fluid"
-                                                                        alt="Colorlib Template"></a>
+                <a href="{{details.image.url }}" class="image-popup"><img src="{{ details.image.url }}"
+                                                                          class="img-fluid"
+                                                                          alt="Colorlib Template"></a>
             </div>
             <div class="col-lg-6 product-details pl-md-5 ftco-animate">
                 <h3>{{details.name}}</h3>
+                <input type="hidden" value="{{details.name}}" name="name">
                 <div class="rating d-flex">
                     <p class="text-left mr-4">
                         <a href="#" class="mr-2">5.0</a>
@@ -109,48 +215,50 @@
                     </p>
                 </div>
                 <form action="{% url 'login' %}">
-                <p class="price"><span>per kg: ${{details.price}}</span></p>
-                <input type="hidden" class="form-control" id="price" value="{{details.price}}">
-                <p>{{details.descrption}}</p>
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <div class="form-group d-flex">
-                            <div class="select-wrap">
-                                <div class="icon"></div>
-                                <!--	                  <select name="" id="" class="form-control">-->
-                                <!--	                  	<option value="">Small</option>-->
-                                <!--	                    <option value="">Medium</option>-->
-                                <!--	                    <option value="">Large</option>-->
-                                <!--	                    <option value="">Extra Large</option>-->
-                                <!--	                  </select>-->
+                    <p class="price"><span>per kg: ${{details.price}}</span></p>
+                    <input type="hidden" class="form-control" id="price" value="{{details.price}}">
+                    <p>{{details.descrption}}</p>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="form-group d-flex">
+                                <div class="select-wrap">
+                                    <div class="icon"></div>
+                                    <!--	                  <select name="" id="" class="form-control">-->
+                                    <!--	                  	<option value="">Small</option>-->
+                                    <!--	                    <option value="">Medium</option>-->
+                                    <!--	                    <option value="">Large</option>-->
+                                    <!--	                    <option value="">Extra Large</option>-->
+                                    <!--	                  </select>-->
+                                </div>
                             </div>
                         </div>
+                        <div class="w-100"></div>
+                        <div class="input-group col-md-6 d-flex mb-3">
+                            <!--	             	<span class="input-group-btn mr-2">-->
+                            <!--	                	<button type="button" class="quantity-left-minus btn" data-type="minus" data-field="quantity">-->
+                            <!--	                   <i class="ion-ios-remove"></i>-->
+                            <!--	                	</button>-->
+                            <!--	            		</span>-->
+                            <input type="number" id="quantity" name="quantity" class="form-control input-number"
+                                   min="1" max="100" required="">
+                            <!--                        <span class="input-group-btn ml-2">-->
+                            <!--	                	<button type="button" class="quantity-right-plus btn" data-type="plus" data-field="quantity">-->
+                            <!--	                     <i class="ion-ios-add"></i>-->
+                            <!--	                 </button>-->
+                            <!--	             	</span>-->
+                        </div>
+                        <div class="w-100"></div>
+                        <div class="col-md-12">
+                            <p style="color: #000;">600 kg available</p>
+                        </div>
                     </div>
-                    <div class="w-100"></div>
-                    <div class="input-group col-md-6 d-flex mb-3">
-<!--	             	<span class="input-group-btn mr-2">-->
-<!--	                	<button type="button" class="quantity-left-minus btn" data-type="minus" data-field="quantity">-->
-<!--	                   <i class="ion-ios-remove"></i>-->
-<!--	                	</button>-->
-<!--	            		</span>-->
-                        <input type="number" id="quantity" name="quantity" class="form-control input-number"
-                               min="1" max="100" required="">
-<!--                        <span class="input-group-btn ml-2">-->
-<!--	                	<button type="button" class="quantity-right-plus btn" data-type="plus" data-field="quantity">-->
-<!--	                     <i class="ion-ios-add"></i>-->
-<!--	                 </button>-->
-<!--	             	</span>-->
-                    </div>
-                    <div class="w-100"></div>
-                    <div class="col-md-12">
-                        <p style="color: #000;">600 kg available</p>
-                    </div>
-                </div>
-                <b><h6>Total price</h6></b>
-                <input type="text" name="totalprice" id="totalprice" required=""><br><br>
-                <button type="submit">Add to Cart</button>
+                    <input type="hidden" name="price" id="price" value="{{details.price}}">
+                    <b><h6>Total price</h6></b>
+                    <input type="text" name="totalprice" id="totalprice" required=""><br><br>
+                    <button type="submit">Login</button>
                 </form>
-<!--                <p><a href="{% url 'login' %}" class="btn btn-black py-3 px-5">Add to Cart</a></p>-->
+                {% endif %}
+                <!--                <p><a href="{% url 'login' %}" class="btn btn-black py-3 px-5">Add to Cart</a></p>-->
             </div>
         </div>
 
@@ -424,6 +532,15 @@
         });
 
 		});
+
+
+
+
+
+
+
+
+
 
 </script>
 
